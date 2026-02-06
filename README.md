@@ -14,37 +14,37 @@ Framework (DRF)**.
 
 ### ✅ Implemented Features
 
--   [x] Custom User model (email-based authentication)
--   [x] User registration (signup)
--   [x] User login & logout
--   [x] Automatic profile creation on signup
--   [x] User profile pages
--   [x] Edit profile (bio, profile picture, cover picture, location)
--   [x] Create posts (text + optional image)
--   [x] Like / Unlike posts
--   [x] Comment on posts
--   [x] Follow / Unfollow users
--   [x] Personalized feed (self + followed users)
--   [x] Paginated feed
--   [x] Function-based views across the project
--   [x] Clean app-based architecture
+- [x] Custom User model (email-based authentication)
+- [x] User registration (signup)
+- [x] User login & logout
+- [x] Automatic profile creation on signup
+- [x] User profile pages
+- [x] Edit profile (bio, profile picture, cover picture, location)
+- [x] Create posts (text + optional image)
+- [x] Like / Unlike posts
+- [x] Comment on posts
+- [x] Follow / Unfollow users
+- [x] Personalized feed (self + followed users)
+- [x] Paginated feed
+- [x] Function-based views across the project
+- [x] Clean app-based architecture
 
 ------------------------------------------------------------------------
 
 ## 🧭 Future Roadmap
 
--   [ ] Post & comment deletion with ownership checks
--   [ ] Notifications system (likes, comments, follows)
--   [ ] Search users and posts
--   [ ] AJAX-based interactions (no page reloads)
--   [ ] Saved posts / bookmarks
--   [ ] Hashtags & trending posts
--   [ ] User blocking and reporting
--   [ ] Password reset via email
--   [ ] Email verification
--   [ ] REST API using Django Rest Framework (DRF)
--   [ ] Automated tests
--   [ ] Production deployment (Docker / Railway / Render)
+- [ ] Post & comment deletion with ownership checks
+- [ ] Notifications system (likes, comments, follows)
+- [ ] Search users and posts
+- [ ] AJAX-based interactions (no page reloads)
+- [ ] Saved posts / bookmarks
+- [ ] Hashtags & trending posts
+- [ ] User blocking and reporting
+- [ ] Password reset via email
+- [ ] Email verification
+- [ ] REST API using Django Rest Framework (DRF)
+- [ ] Automated tests
+- [ ] Production deployment (Docker / Railway / Render)
 
 ------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ Framework (DRF)**.
 -   **Database:** SQLite (development)
 -   **Authentication:** Django Auth (custom User model)
 -   **Templates:** Django Templates
--   **Frontend:** Minimal HTML (backend-focused)
+-   **Frontend:** Tailwind CSS, FontAwesome
 
 ------------------------------------------------------------------------
 
@@ -138,7 +138,6 @@ Open in browser:
 -   This project intentionally avoids DRF initially to strengthen Django
     fundamentals
 -   Emphasis is on backend design, performance, and scalability
--   UI is intentionally minimal
 
 ------------------------------------------------------------------------
 
