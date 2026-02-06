@@ -40,6 +40,7 @@ def comment_post(request, post_id):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.user = request.user
+            comment.post = post
             comment.save()
             return redirect(request.META.get('HTTP_REFERER', 'core:feed'))
     else:
