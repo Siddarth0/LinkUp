@@ -13,7 +13,7 @@ def profile_detail(request, username):
         'profile': profile,
         'posts': posts,
     }
-    return render(request, 'profiles/profile.html', context)
+    return render(request, 'profiles/profile_detail.html', context)
 
 
 def profile_edit(request):
