@@ -4,26 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LinkUp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+    </style>
 </head>
-<body>
-    <nav>
-    <a href="{% url 'core:feed' %}">LinkUp</a>
+<body class="bg-gray-100 min-h-screen font-sans text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div>
+                        <!-- Website Logo -->
+                        <a href="{% url 'core:feed' %}" class="flex items-center py-4 px-2">
+                            <i class="fas fa-link text-blue-500 text-2xl mr-2"></i>
+                            <span class="font-semibold text-gray-700 text-lg">LinkUp</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Primary Navbar items -->
+                <div class="hidden md:flex items-center space-x-3">
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'core:feed' %}" class="py-2 px-2 text-gray-500 hover:text-blue-500 transition duration-300">Feed</a>
+                        <a href="{% url 'profiles:profile_detail' request.user.username %}" class="py-2 px-2 text-gray-500 hover:text-blue-500 transition duration-300">
+                            {{ request.user.username }}
+                        </a>
+                        <a href="{% url 'accounts:logout' %}" class="py-2 px-4 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-300">Logout</a>
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" class="py-2 px-2 font-medium text-gray-500 hover:text-blue-500 transition duration-300">Login</a>
+                        <a href="{% url 'accounts:signup' %}" class="py-2 px-2 font-medium bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">Sign Up</a>
+                    {% endif %}
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button class="outline-none mobile-menu-button">
+                        <i class="fas fa-bars text-gray-500 text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden mobile-menu md:hidden border-t">
+             {% if request.user.is_authenticated %}
+                <ul class="flex flex-col">
+                    <li class="active border-b">
+                         <a href="{% url 'core:feed' %}" class="block text-sm px-2 py-4 text-gray-700 hover:bg-blue-50 transition duration-300">Feed</a>
+                    </li>
+                    <li class="border-b">
+                        <a href="{% url 'profiles:profile_detail' request.user.username %}" class="block text-sm px-2 py-4 text-gray-700 hover:bg-blue-50 transition duration-300">{{ request.user.username }}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:logout' %}" class="block text-sm px-2 py-4 text-gray-700 hover:bg-blue-50 transition duration-300">Logout</a>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="flex flex-col">
+                    <li class="border-b">
+                         <a href="{% url 'accounts:login' %}" class="block text-sm px-2 py-4 text-gray-700 hover:bg-blue-50 transition duration-300">Login</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:signup' %}" class="block text-sm px-2 py-4 text-gray-700 hover:bg-blue-50 transition duration-300">Sign Up</a>
+                    </li>
+                </ul>
+            {% endif %}
+        </div>
+    </nav>
 
-    {% if request.user.is_authenticated %}
-        <a href="{% url 'profiles:profile_detail' request.user.username %}">
-            {{ request.user.username }}
-        </a>
-        <a href="{% url 'accounts:logout' %}">Logout</a>
-    {% else %}
-        <a href="{% url 'accounts:login' %}">Login</a>
-        <a href="{% url 'accounts:signup' %}">Sign Up</a>
-    {% endif %}
-</nav>
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        {% block content %}
+        {% endblock %}
+    </div>
 
-<hr>
+    <!-- Script for mobile menu -->
+    <script>
+        const btn = document.querySelector("button.mobile-menu-button");
+        const menu = document.querySelector(".mobile-menu");
 
-{% block content %}
-{% endblock %}
-    
+        btn.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+        });
+    </script>
 </body>
 </html>

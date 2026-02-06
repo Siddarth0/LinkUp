@@ -1,29 +1,105 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Feed</h2>
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- Left Sidebar: User Mini Profile & Navigation (Desktop) -->
+    <div class="hidden lg:block lg:col-span-1">
+        {% if request.user.is_authenticated %}
+        <div class="bg-white rounded-lg shadow-md p-6 sticky top-24">
+            <div class="text-center">
+                {% if request.user.profile.profile_pic %}
+                    <img src="{{ request.user.profile.profile_pic.url }}" class="w-24 h-24 rounded-full mx-auto object-cover mb-4 border-4 border-blue-50">
+                {% else %}
+                    <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4 text-3xl font-bold text-blue-500">
+                        {{ request.user.username.0|upper }}
+                    </div>
+                {% endif %}
+                <h3 class="text-xl font-bold text-gray-800">{{ request.user.username }}</h3>
+                <p class="text-gray-500 text-sm mb-4">{{ request.user.profile.bio|default:"No bio yet."|truncatechars:60 }}</p>
+                
+                <div class="flex justify-around text-sm text-gray-600 mb-6 font-medium">
+                    <div class="flex flex-col">
+                        <span class="text-lg font-bold text-gray-900">{{ request.user.followers.count }}</span>
+                        <span>Followers</span>
+                    </div>
+                     <div class="flex flex-col">
+                        <span class="text-lg font-bold text-gray-900">{{ request.user.following.count }}</span>
+                        <span>Following</span>
+                    </div>
+                </div>
 
-<a href="{% url 'posts:create_post' %}">Create Post</a>
+                <a href="{% url 'profiles:profile_detail' request.user.username %}" class="block w-full text-center py-2 px-4 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-50 transition">View Profile</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 
-<hr>
+    <!-- Center Feed -->
+    <div class="col-span-1 lg:col-span-2 space-y-6">
+        <!-- Create Post Card -->
+        <div class="bg-white rounded-lg shadow-md p-4 flex items-center gap-4">
+             {% if request.user.profile.profile_pic %}
+                <img src="{{ request.user.profile.profile_pic.url }}" class="w-10 h-10 rounded-full object-cover">
+            {% else %}
+                <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
+                    {{ request.user.username.0|upper }}
+                </div>
+            {% endif %}
+            <a href="{% url 'posts:create_post' %}" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-500 py-3 px-4 rounded-full text-left text-sm transition transition-colors cursor-text block">
+                What's on your mind, {{ request.user.username }}?
+            </a>
+        </div>
 
-{% for post in posts %}
-    {% include 'posts/post_item.html' with post=post %}
-{% empty %}
-    <p>No posts yet.</p>
-{% endfor %}
+        <!-- Posts Loop -->
+        <div class="space-y-6">
+            {% for post in posts %}
+                {% include 'posts/post_item.html' with post=post %}
+            {% empty %}
+                <div class="text-center py-10 bg-white rounded-lg shadow-sm">
+                    <div class="text-gray-400 text-6xl mb-4">
+                        <i class="far fa-newspaper"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-700 mb-2">No posts yet</h3>
+                    <p class="text-gray-500">Be the first to share something!</p>
+                </div>
+            {% endfor %}
+        </div>
 
-<div>
-    {% if posts.has_previous %}
-        <a href="?page={{ posts.previous_page_number }}">Previous</a>
-    {% endif %}
+        <!-- Pagination -->
+        {% if posts.has_other_pages %}
+        <div class="flex justify-center space-x-2 mt-8">
+            {% if posts.has_previous %}
+                <a href="?page={{ posts.previous_page_number }}" class="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-700">Previous</a>
+            {% endif %}
 
-    <span>
-        Page {{ posts.number }} of {{ posts.paginator.num_pages }}
-    </span>
+            <span class="px-4 py-2 bg-blue-500 text-white rounded-md font-bold">
+                {{ posts.number }}
+            </span>
 
-    {% if posts.has_next %}
-        <a href="?page={{ posts.next_page_number }}">Next</a>
-    {% endif %}
+            {% if posts.has_next %}
+                 <a href="?page={{ posts.next_page_number }}" class="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-700">Next</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Right Sidebar (Suggestions / Ads Placeholder) -->
+    <div class="hidden lg:block lg:col-span-1">
+        <div class="bg-white rounded-lg shadow-md p-6 sticky top-24">
+            <h4 class="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wide">Suggested for you</h4>
+            <!-- Placeholder content since I don't have a 'suggestions' context variable yet -->
+            <p class="text-gray-500 text-sm">Find more people to follow to see their posts here.</p>
+            <div class="mt-4">
+                 <!-- Just a dummy list or empty -->
+                 <div class="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                     Coming soon
+                 </div>
+            </div>
+            
+            <div class="mt-8 border-t pt-4 text-xs text-gray-400">
+                &copy; 2026 LinkUp Project
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 from posts.models import Post
 
+@login_required
 def feed_view(request):
     user = request.user
 
@@ -16,7 +18,7 @@ def feed_view(request):
         .order_by('-created_at')
     )
 
-    paginator = paginator(posts_list, 10)
+    paginator = Paginator(posts_list, 10)
     page_number = request.GET.get('page')
     posts = paginator.get_page(page_number)
 

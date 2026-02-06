@@ -1,13 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Create Post</h2>
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Create Post</h2>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Post</button>
-</form>
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Manual rendering for better styling -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Caption</label>
+            <textarea name="content" rows="4" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none" placeholder="What's on your mind?"></textarea>
+            {% if form.content.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.content.errors.0 }}</p>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Image (Optional)</label>
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition cursor-pointer relative bg-gray-50">
+                 <input type="file" name="image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="document.getElementById('file-name').innerText = this.files[0].name">
+                 <div class="text-gray-500">
+                     <i class="fas fa-image text-3xl mb-2 text-gray-400"></i>
+                     <p class="font-medium">Click to upload image</p>
+                     <p id="file-name" class="text-xs text-gray-400 mt-2">No file selected</p>
+                 </div>
+            </div>
+             {% if form.image.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.image.errors.0 }}</p>
+            {% endif %}
+        </div>
 
-<a href="{% url 'core:feed' %}">Back to Feed</a>
+        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+             <a href="{% url 'core:feed' %}" class="text-gray-500 hover:text-gray-700 text-sm font-medium">Cancel</a>
+             <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-8 rounded-full hover:bg-blue-600 transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">Post</button>
+        </div>
+    </form>
+</div>
 {% endblock %}
