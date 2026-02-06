@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Feed</h2>
+
+<a href="{% url 'posts:create_post' %}">Create Post</a>
+
+<hr>
+
+{% for post in posts %}
+    {% include 'posts/post_item.html' with post=post %}
+{% empty %}
+    <p>No posts yet.</p>
+{% endfor %}
+
+<div>
+    {% if posts.has_previous %}
+        <a href="?page={{ posts.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span>
+        Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+    </span>
+
+    {% if posts.has_next %}
+        <a href="?page={{ posts.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+{% endblock %}

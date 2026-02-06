@@ -1,0 +1,48 @@
+<div class="post">
+    <h4>
+        <a href="{% url 'profiles:profile_detail' post.author.username %}">
+            {{ post.author.username }}
+        </a>
+    </h4>
+
+    <p>{{ post.content }}</p>
+
+    {% if post.image %}
+        <img src="{{ post.image.url }}" width="300">
+    {% endif %}
+
+    <p>
+        Likes: {{ post.likes.count }} |
+        Comments: {{ post.comments.count }}
+    </p>
+
+    {% if request.user.is_authenticated %}
+        <form method="POST" action="{% url 'posts:like_post' post.id %}">
+            {% csrf_token %}
+            <button type="submit">
+                {% if request.user in post.likes.all.values_list('user', flat=True) %}
+                    Unlike
+                {% else %}
+                    Like
+                {% endif %}
+            </button>
+        </form>
+
+        <form method="POST" action="{% url 'posts:comment_post' post.id %}">
+            {% csrf_token %}
+            <textarea name="content" rows="2" placeholder="Write a comment..."></textarea>
+            <button type="submit">Comment</button>
+        </form>
+    {% endif %}
+
+    <div class="comments">
+        {% for comment in post.comments.all %}
+            <p>
+                <strong>{{ comment.user.username }}</strong>:
+                {{ comment.content }}
+            </p>
+        {% endfor %}
+    </div>
+</div>
+
+<hr>
