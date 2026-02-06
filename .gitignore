@@ -1,0 +1,50 @@
+# ========================
+# Python
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ========================
+# Virtual environment
+# ========================
+env/
+venv/
+ENV/
+.venv/
+
+# ========================
+# Django
+# ========================
+*.sqlite3
+db.sqlite3
+*.log
+/staticfiles/
+media/
+*.pot
+*.pyc
+
+# ========================
+# Environment / Secrets
+# ========================
+.env
+.env.local
+.env.production
+.env.test
+.env.example    # optional example file for reference
+
+# ========================
+# IDEs / Editors
+# ========================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+
+# ========================
+# OS generated
+# ========================
+.DS_Store
+Thumbs.db
