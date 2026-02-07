@@ -58,6 +58,13 @@
                     </button>
                 </form>
 
+                {% if request.user == post.author %}
+                   <a href="{% url 'posts:edit_post' post.id %}">Edit</a>
+                   <a href="{% url 'posts:delete_post' post.id %}">Delete</a>
+                {% endif %}
+
+
+
                 <!-- Comment Button -->
                 <button onclick="document.getElementById('comment-box-{{ post.id }}').focus()" class="flex-1 py-2 rounded-md flex items-center justify-center space-x-2 text-gray-600 hover:bg-gray-100 transition duration-200">
                     <i class="far fa-comment-alt"></i>
@@ -79,32 +86,39 @@
     </div>
 
     <!-- Comments Section -->
-    {% if post.comments.exists %}
-        <div class="bg-gray-50 border-t border-gray-100 p-4 mt-2">
-            <h5 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Comments</h5>
-            <div class="space-y-3">
-                {% for comment in post.comments.all %}
-                    <div class="flex gap-2">
-                        <!-- Commenter Avatar -->
-                         {% if comment.user.profile.profile_pic %}
-                            <img src="{{ comment.user.profile.profile_pic.url }}" class="w-8 h-8 rounded-full flex-shrink-0 object-cover">
-                        {% else %}
-                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 text-xs text-gray-600 font-bold">
-                                {{ comment.user.username.0|upper }}
+{% if post.comments.exists %}
+    <div class="bg-gray-50 border-t border-gray-100 p-4 mt-2">
+        <h5 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Comments</h5>
+        <div class="space-y-3">
+            {% for comment in post.comments.all %}
+                <div class="flex gap-2">
+                    <!-- Commenter Avatar -->
+                    {% if comment.user.profile.profile_pic %}
+                        <img src="{{ comment.user.profile.profile_pic.url }}" class="w-8 h-8 rounded-full flex-shrink-0 object-cover">
+                    {% else %}
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 text-xs text-gray-600 font-bold">
+                            {{ comment.user.username.0|upper }}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Comment Content -->
+                    <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm text-sm flex-1">
+                        <a href="{% url 'profiles:profile_detail' comment.user.username %}" class="font-bold text-gray-900 hover:underline block mb-1">
+                            {{ comment.user.username }}
+                        </a>
+                        <p class="text-gray-700">{{ comment.content }}</p>
+
+                        {% if request.user == comment.user %}
+                            <div class="mt-2 text-xs text-gray-500 space-x-2">
+                                <a href="{% url 'posts:edit_comment'  comment.id %}" class="hover:underline">Edit</a>
+                                <a href="{% url 'posts:delete_comment'  comment.id %}" class="hover:underline">Delete</a>
                             </div>
                         {% endif %}
-                        
-                        <!-- Comment Content -->
-                        <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm text-sm flex-1">
-                            <a href="{% url 'profiles:profile_detail' comment.user.username %}" class="font-bold text-gray-900 hover:underline block mb-1">
-                                {{ comment.user.username }}
-                            </a>
-                            <p class="text-gray-700">{{ comment.content }}</p>
-                        </div>
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
         </div>
-    {% endif %}
+    </div>
+{% endif %}
 </div>
 
