@@ -80,3 +80,33 @@ def delete_post(request, post_id):
     
     return render(request, 'posts/delete_post.html', {'post': post})
 
+
+@login_required
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if comment.user != request.user:
+        return HttpResponseForbidden("You are not allowed to edit this comment.")
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('core:feed')
+    else:
+        form = CommentForm(instance=comment)
+    
+    return render(request, 'posts/edit_comment.html', {'form': form, 'comment': comment})
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if comment.user != request.user:
+        return HttpResponseForbidden("You are not allowed to delete this comment.")
+    
+    if request.method == 'POST':
+        comment.delete()
+        return redirect('core:feed')
+    
+    return render(request, 'posts/delete_comment.html', {'comment': comment})
