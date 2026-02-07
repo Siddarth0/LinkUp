@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from .models import Post, PostLike, Comment
 from .forms import PostForm, CommentForm
 
@@ -47,3 +48,35 @@ def comment_post(request, post_id):
         form = CommentForm()
     
     return render(request, 'posts/comment_form.html', {'form':form})
+
+
+@login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if post.author != request.user:
+        return HttpResponseForbidden("You are not allowed to edit this post.")
+    
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('core:feed')
+    else:
+        form = PostForm(instance=post)
+
+    return render(request, 'posts/edit_post.html', {'form': form, 'post': post})
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if post.author != request.user:
+        return HttpResponseForbidden("You are not allowed to delete this post.")
+    
+    if request.method == 'POST':
+        post.delete()
+        return redirect('core:feed')
+    
+    return render(request, 'posts/delete_post.html', {'post': post})
+
