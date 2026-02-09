@@ -18,6 +18,7 @@ def feed_view(request):
         .select_related('author')
         .prefetch_related('likes', 'comments')
         .order_by('-created_at')
+        .distinct()
     )
 
     paginator = Paginator(posts_list, 10)
