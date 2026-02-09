@@ -147,5 +147,38 @@ function getCookie(name) {
 }
 </script>
 
+<script>
+let page = 2;
+let loading = false;
+
+window.addEventListener("scroll", function () {
+    if (loading) return;
+
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+        loading = true;
+        document.getElementById("loading").style.display = "block";
+
+        fetch(`?page=${page}`, {
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById("post-container");
+            container.insertAdjacentHTML("beforeend", data.html);
+
+            if (data.has_next) {
+                page += 1;
+                loading = false;
+            } else {
+                document.getElementById("loading").innerText = "No more posts";
+            }
+        });
+    }
+});
+</script>
+
+
 </body>
 </html>
