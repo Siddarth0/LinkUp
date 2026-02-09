@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,81 +105,8 @@
             menu.classList.toggle("hidden");
         });
     </script>
-    <script>
-document.addEventListener("click", function (e) {
-    if (e.target.classList.contains("like-btn")) {
-        const button = e.target;
-        const postId = button.dataset.postId;
-
-        fetch(`/posts/${postId}/like/`, {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": getCookie("csrftoken"),
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            const likeCount = document.getElementById(
-                `like-count-${postId}`
-            );
-
-            likeCount.textContent = data.like_count;
-
-            button.textContent = data.liked ? "Unlike" : "Like";
-        });
-    }
-});
-
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
-            if (cookie.startsWith(name + "=")) {
-                cookieValue = decodeURIComponent(
-                    cookie.substring(name.length + 1)
-                );
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-</script>
-
-<script>
-let page = 2;
-let loading = false;
-
-window.addEventListener("scroll", function () {
-    if (loading) return;
-
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-        loading = true;
-        document.getElementById("loading").style.display = "block";
-
-        fetch(`?page=${page}`, {
-            headers: {
-                "X-Requested-With": "XMLHttpRequest"
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            const container = document.getElementById("post-container");
-            container.insertAdjacentHTML("beforeend", data.html);
-
-            if (data.has_next) {
-                page += 1;
-                loading = false;
-            } else {
-                document.getElementById("loading").innerText = "No more posts";
-            }
-        });
-    }
-});
-</script>
-
+    
+<script src="{% static 'js/main.js' %}"></script>
 
 </body>
 </html>
