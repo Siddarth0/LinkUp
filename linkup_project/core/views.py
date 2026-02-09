@@ -11,7 +11,7 @@ def feed_view(request):
 
     followed_users = [f.following for f in user.following.all()]
 
-    authors = followed_users + [user]
+    authors = list(set(followed_users + [user]))
 
     posts_list = (
         Post.objects.filter(author__in=authors, is_deleted=False)
@@ -26,6 +26,12 @@ def feed_view(request):
     posts = paginator.get_page(page_number)
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        try:
+            if int(page_number) > paginator.num_pages:
+                return JsonResponse({'html': '', 'has_next': False})
+        except (ValueError, TypeError):
+            pass
+
         html = render_to_string(
             'posts/post_list.html',
             {'posts': posts},
