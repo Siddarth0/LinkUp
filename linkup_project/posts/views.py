@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from .models import Post, PostLike, Comment
 from .forms import PostForm, CommentForm
+from notifications.models import Notification
+
 
 @login_required
 def create_post(request):
@@ -28,6 +30,14 @@ def like_post(request, post_id):
 
     if not created:
         like.delete()
+    else:
+        if post.author != user:
+            Notification.objects.create(
+                sender = user,
+                receiver = post.author,
+                notification_type = Notification.LIKE,
+                post = post
+            )
     
     return redirect(request.META.get('HTTP_REFERER', 'core:feed'))
 
@@ -43,7 +53,17 @@ def comment_post(request, post_id):
             comment.user = request.user
             comment.post = post
             comment.save()
+
+            if post.author != request.user:
+                Notification.objects.create(
+                    sender = request.user,
+                    receiver = post.author,
+                    notification_type = Notification.COMMENT,
+                    post = post
+                )
             return redirect(request.META.get('HTTP_REFERER', 'core:feed'))
+        
+
     else:
         form = CommentForm()
     
@@ -110,3 +130,5 @@ def delete_comment(request, comment_id):
         return redirect('core:feed')
     
     return render(request, 'posts/delete_comment.html', {'comment': comment})
+
+
