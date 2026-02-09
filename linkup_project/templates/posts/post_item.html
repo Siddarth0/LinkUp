@@ -45,18 +45,14 @@
         {% if request.user.is_authenticated %}
             <div class="flex items-center justify-between gap-4">
                 <!-- Like Button -->
-                <form method="POST" action="{% url 'posts:like_post' post.id %}" class="flex-1">
-                    {% csrf_token %}
-                    <button type="submit" class="w-full py-2 rounded-md flex items-center justify-center space-x-2 transition duration-200 
-                        {% if post|is_liked_by:request.user %}
-                            text-red-500 bg-red-50 hover:bg-red-100
-                        {% else %}
-                            text-gray-600 hover:bg-gray-100
-                        {% endif %}">
-                        <i class="{% if post|is_liked_by:request.user %}fas{% else %}far{% endif %} fa-heart"></i>
-                        <span class="font-medium">{% if post|is_liked_by:request.user %}Liked{% else %}Like{% endif %}</span>
-                    </button>
-                </form>
+                <button class="like-btn"
+                        data-post-id="{{ post.id }}">
+                    Like
+                </button>
+
+                <span id="like-count-{{ post.id }}">
+                     {{ post.likes.count }}
+                </span>
 
                 {% if request.user == post.author %}
                    <a href="{% url 'posts:edit_post' post.id %}">Edit</a>

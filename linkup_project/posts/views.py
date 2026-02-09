@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from .models import Post, PostLike, Comment
 from .forms import PostForm, CommentForm
 from notifications.models import Notification
@@ -30,7 +30,10 @@ def like_post(request, post_id):
 
     if not created:
         like.delete()
+        liked = False
     else:
+        liked = True
+
         if post.author != user:
             Notification.objects.create(
                 sender = user,
@@ -39,7 +42,10 @@ def like_post(request, post_id):
                 post = post
             )
     
-    return redirect(request.META.get('HTTP_REFERER', 'core:feed'))
+    return JsonResponse({
+        'liked': liked,
+        'like_count': post.likes.count()
+    })
 
 
 @login_required

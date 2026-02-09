@@ -104,5 +104,48 @@
             menu.classList.toggle("hidden");
         });
     </script>
+    <script>
+document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("like-btn")) {
+        const button = e.target;
+        const postId = button.dataset.postId;
+
+        fetch(`/posts/${postId}/like/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            const likeCount = document.getElementById(
+                `like-count-${postId}`
+            );
+
+            likeCount.textContent = data.like_count;
+
+            button.textContent = data.liked ? "Unlike" : "Like";
+        });
+    }
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
 </body>
 </html>
