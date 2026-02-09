@@ -26,6 +26,7 @@ urlpatterns = [
     path('follows/',include('follows.urls', namespace='follows')),
     path('profiles/', include('profiles.urls', namespace='profiles')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('notifications/', include('notifications.urls')),
 ]
 
 if settings.DEBUG:

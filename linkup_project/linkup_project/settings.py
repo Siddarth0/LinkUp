@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'follows',
     'posts',
     'profiles',
+    'notifications',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
